@@ -24,6 +24,17 @@ module.exports = function(grunt){
             }
         },
         
+        connect:{
+            default:{
+                options:{
+                    port:8000,
+                    hostname:'localhost',
+                    base:'test-results',
+                    livereload:10000
+                }
+            }
+        },
+        
         watch:{
             options:{
                 livereload:10000
@@ -42,17 +53,6 @@ module.exports = function(grunt){
             },
             'update-results':{
                 files:['test-results/index.html']
-            }
-        },
-        
-        connect:{
-            default:{
-                options:{
-                    port:8000,
-                    hostname:'localhost',
-                    base:'test-results',
-                    livereload:10000
-                }
             }
         }
         
