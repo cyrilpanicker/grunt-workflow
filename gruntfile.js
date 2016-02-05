@@ -39,13 +39,13 @@ module.exports = function(grunt){
             },
             'unit-test-report':{
                 options:{
-                    port:8000,
+                    port:8081,
                     base:'./test-results/unit'
                 }
             },
             'e2e-test-report':{
                 options:{
-                    port:9000,
+                    port:8082,
                     base:'./test-results/e2e'
                 }
             }
