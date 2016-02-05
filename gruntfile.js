@@ -9,7 +9,7 @@ module.exports = function(grunt){
                 sourceMap:false,
                 fast:'never'
             },
-            default:{
+            default: {
                 files:[
                     {src:['source/**/*.ts'],dest:'build'}
                 ]
@@ -24,35 +24,59 @@ module.exports = function(grunt){
             }
         },
         
-        connect:{
+        protractor:{
             default:{
+                configFile:'protractor.conf.js',
+                keepAlive:true,
+                noColor:false
+            }
+        },
+        
+        connect:{
+            options:{
+                hostname:'localhost',
+                livereload:true
+            },
+            'unit-test-report':{
                 options:{
                     port:8000,
-                    hostname:'localhost',
-                    base:'test-results',
-                    livereload:10000
+                    base:'./test-results/unit'
+                }
+            },
+            'e2e-test-report':{
+                options:{
+                    port:9000,
+                    base:'./test-results/e2e'
                 }
             }
         },
         
         watch:{
-            options:{
-                livereload:10000
-            },
-            'compile-ts':{
+            'source':{
                 files:[
                     'source/**/*.ts'
                 ],
                 tasks:['ts']
             },
-            'run-tests':{
+            'unit-tests':{
+                options:{
+                    livereload:true
+                },
                 files:[
-                    'build/**/*.js'
+                    'build/**/*.js',
+                    '!build/e2e-specs/*.js'
                 ],
                 tasks:['karma:default:run']
             },
-            'update-results':{
-                files:['test-results/index.html']
+            'e2e-tests':{
+                options:{
+                    livereload:true
+                },
+                files:[
+                    'build/**/*.js',
+                    '!build/unit-specs/*.js'
+                ],
+                tasks:['protractor:default:run']
             }
         }
         
@@ -62,12 +86,10 @@ module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-ts');
+    grunt.loadNpmTasks('grunt-protractor-runner');
     
-    grunt.registerTask('default',[
-        'ts',
-        'karma',
-        'connect',
-        'watch'
-    ]);
-    
+    grunt.registerTask('default',['ts','watch:source']);
+    grunt.registerTask('unit',['karma','connect:unit-test-report','watch:unit-tests']);
+    grunt.registerTask('e2e',['protractor','connect:e2e-test-report','watch:e2e-tests']);
+
 };

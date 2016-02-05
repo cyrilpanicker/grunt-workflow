@@ -2,7 +2,8 @@ module.exports = function(config) {
     config.set({
         frameworks: ['jasmine'],
         files: [
-            'build/**/*.js'
+            'build/scripts/*.js',
+            'build/unit-specs/*.js'
         ],
         reporters: ['progress','html'],
         port: 9000,
@@ -15,7 +16,7 @@ module.exports = function(config) {
             focusOnFailures: true,
             namedFiles: true,
             reportName: 'index',
-            pageTitle:'Test Results'
+            pageTitle:'Unit Test Report'
         }
     });
 };
