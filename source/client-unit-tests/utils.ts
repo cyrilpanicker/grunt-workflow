@@ -1,6 +1,5 @@
-/// <reference path="../../typings/jasmine/jasmine.d.ts" />
-/// <reference path="../scripts/utils.ts" />
-
+/// <reference path="../typings/jasmine/jasmine.d.ts" />
+/// <reference path="../client-scripts/utils.ts" />
 
 describe('utils.js',() => {
     it('add method',() => {

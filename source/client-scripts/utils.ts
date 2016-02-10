@@ -12,3 +12,5 @@ var utils = {
         }
     }
 };
+
+document.write('hi tom');

@@ -9,10 +9,33 @@ module.exports = function(grunt){
                 sourceMap:false,
                 fast:'never'
             },
-            default: {
-                files:[
-                    {src:['source/**/*.ts'],dest:'build'}
-                ]
+            // 'client-scripts': {
+            //     files:[
+            //         {src:['source/client-scripts/**/*.ts'],dest:'client/scripts'}
+            //     ]
+            // },
+            // 'client-unit-tests': {
+            //     files:[
+            //         {src:['source/client-unit-tests/**/*.ts'],dest:'tests/client-unit'}
+            //     ]
+            // },
+            // 'client-e2e-tests': {
+            //     files:[
+            //         {src:['source/client-e2e-tests/**/*.ts'],dest:'tests/client-e2e'}
+            //     ]
+            // }
+            'client-scripts':{
+                src:[
+                    'source/client-scripts/**/*.ts',
+                ],
+                outDir:'client/scripts'
+            },
+            'client-unit-tests':{
+                src:[
+                    'source/client-unit-tests/**/*.ts',
+                    '!source/client-scripts/**/*.ts'
+                ],
+                outDir:'tests/client-unit-tests'
             }
         },
         
@@ -37,6 +60,12 @@ module.exports = function(grunt){
                 hostname:'localhost',
                 livereload:true
             },
+            'client':{
+                options:{
+                    port:8080,
+                    base:'./client'
+                }
+            },
             'unit-test-report':{
                 options:{
                     port:8081,
@@ -54,9 +83,17 @@ module.exports = function(grunt){
         watch:{
             'source':{
                 files:[
-                    'source/**/*.ts'
+                    'source/client-scripts/**/*.ts'
                 ],
-                tasks:['ts']
+                tasks:['ts:client-scripts']
+            },
+            'client':{
+                options:{
+                    livereload:true
+                },
+                files:[
+                    'client/**/*'
+                ]
             },
             'unit-tests':{
                 options:{
@@ -78,6 +115,15 @@ module.exports = function(grunt){
                 ],
                 tasks:['protractor:default:run']
             }
+        },
+        
+        concurrent:{
+            'watch-source-client':{
+                options:{
+                    logConcurrentOutput:true
+                },
+                tasks:['watch:source','watch:client']
+            }
         }
         
     });
@@ -87,8 +133,10 @@ module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-ts');
     grunt.loadNpmTasks('grunt-protractor-runner');
+    grunt.loadNpmTasks('grunt-concurrent');
     
-    grunt.registerTask('default',['ts','watch:source']);
+    grunt.registerTask('default',['ts:client-unit-tests']);
+    // grunt.registerTask('default',['ts:client-scripts','connect:client','concurrent:watch-source-client']);
     grunt.registerTask('unit',['karma','connect:unit-test-report','watch:unit-tests']);
     grunt.registerTask('e2e',['protractor','connect:e2e-test-report','watch:e2e-tests']);
 
